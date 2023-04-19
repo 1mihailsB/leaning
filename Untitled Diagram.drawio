@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net" modified="2023-04-19T15:29:09.975Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36" etag="kp6FGGrkp3QY1DYKE2gm" version="21.1.9" type="github">
+  <diagram name="Page-1" id="IAH61hIkGfNC_TxMuG4t">
+    <mxGraphModel dx="1434" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-6" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;Event bus&amp;nbsp;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="415" width="720" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-11" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="100" y="175" width="275" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="265" as="sourcePoint" />
+            <mxPoint x="640" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-14" value="" style="rounded=0;verticalAlign=middle;horizontal=1;html=1;whiteSpace=wrap;fontColor=default;labelBackgroundColor=none;labelBorderColor=none;" parent="1" vertex="1">
+          <mxGeometry x="550" y="175" width="250" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-32" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="490" y="515" width="350" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-23" value="Frontend. Viewers + streamers" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;" parent="4a4NvUETeh-wOAMc8H7S-32" vertex="1">
+          <mxGeometry x="115" y="400" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-26" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="4a4NvUETeh-wOAMc8H7S-32" vertex="1">
+          <mxGeometry y="50" width="350" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-28" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="4a4NvUETeh-wOAMc8H7S-32" source="4a4NvUETeh-wOAMc8H7S-26" target="4a4NvUETeh-wOAMc8H7S-23" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-90" y="240" as="sourcePoint" />
+            <mxPoint x="-40" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-30" value="Backend,&lt;br&gt;maybe Java.&amp;nbsp;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="4a4NvUETeh-wOAMc8H7S-32" vertex="1">
+          <mxGeometry x="20" y="30" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-38" value="&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;request to start stream,&lt;/span&gt;&lt;br&gt;&lt;/li&gt;&lt;li&gt;stream recording ready to view,&lt;/li&gt;&lt;li&gt;another user started stream(notification),&lt;/li&gt;&lt;li&gt;connect streamer to media server&lt;/li&gt;&lt;/ul&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="4a4NvUETeh-wOAMc8H7S-32" vertex="1">
+          <mxGeometry x="70" y="70" width="230" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-44" value="REST API" style="rounded=1;whiteSpace=wrap;html=1;" parent="4a4NvUETeh-wOAMc8H7S-32" vertex="1">
+          <mxGeometry x="115" y="280" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-34" value="" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="366.25" y="655" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-35" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.445;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-26" target="4a4NvUETeh-wOAMc8H7S-34" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="655" as="sourcePoint" />
+            <mxPoint x="410" y="605" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-42" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.85;entryY=1.05;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.591;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-38" target="4a4NvUETeh-wOAMc8H7S-6" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="340" y="635" as="sourcePoint" />
+            <mxPoint x="440" y="535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-43" value="Send/pull events" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="4a4NvUETeh-wOAMc8H7S-42" vertex="1" connectable="0">
+          <mxGeometry x="0.2646" y="2" relative="1" as="geometry">
+            <mxPoint x="9" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-45" value="&lt;br&gt;Media server to receive video stream (wowza/red5pro/kurento)&lt;br&gt;Libs: RTMP, ffmpeg" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="108.75" y="125" width="257.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-46" value="&lt;ul&gt;&lt;li&gt;user requests to startstream&lt;/li&gt;&lt;li&gt;initiate connection with streamer&lt;/li&gt;&lt;li&gt;initiate connection with viewer&lt;/li&gt;&lt;li&gt;request start recording ongoing stream&lt;/li&gt;&lt;/ul&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="215" width="221.25" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-47" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.209;entryY=0.995;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.103;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-6" target="4a4NvUETeh-wOAMc8H7S-46" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="415.75" y="392" as="sourcePoint" />
+            <mxPoint x="411.75" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-48" value="Send/pull events" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="4a4NvUETeh-wOAMc8H7S-47" vertex="1" connectable="0">
+          <mxGeometry x="0.2646" y="2" relative="1" as="geometry">
+            <mxPoint x="6" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-49" value="Video stream recording mechanism. So live stream is recorded and can be replayed later. Maybe should be inside &lt;b&gt;&lt;u&gt;Media server&lt;/u&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="600" y="135" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-50" value="&lt;ul&gt;&lt;li&gt;start stream recording request&lt;/li&gt;&lt;li&gt;finished stream recording ready for viewing&lt;/li&gt;&lt;/ul&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="570" y="225" width="223.75" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-52" value="" style="shape=flexArrow;endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.84;exitY=-0.023;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-6" target="4a4NvUETeh-wOAMc8H7S-50" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="700" y="405" as="sourcePoint" />
+            <mxPoint x="700.88" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-53" value="Send/pull events" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="4a4NvUETeh-wOAMc8H7S-52" vertex="1" connectable="0">
+          <mxGeometry x="0.2646" y="2" relative="1" as="geometry">
+            <mxPoint x="9" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-57" value="(c++) Something like Kafka (persistent messages)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="290" y="385" width="325" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-58" value="&lt;font color=&quot;#050505&quot;&gt;Maybe existing software for sending video data is required (OBS) ?&amp;nbsp;&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="155.63" y="835" width="209.37" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-61" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=0.456;exitY=-0.027;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.006;entryY=0.597;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-58" target="4a4NvUETeh-wOAMc8H7S-11" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="195.63" y="765" as="sourcePoint" />
+            <mxPoint x="245.63" y="715" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="10" y="475" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-62" value="User" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="530" y="1000" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-63" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-62" target="4a4NvUETeh-wOAMc8H7S-23" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="420" y="800" as="sourcePoint" />
+            <mxPoint x="470" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-64" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.976;entryY=0.885;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="4a4NvUETeh-wOAMc8H7S-62" target="4a4NvUETeh-wOAMc8H7S-58" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="1029.47" as="sourcePoint" />
+            <mxPoint x="535" y="1029.47" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4a4NvUETeh-wOAMc8H7S-65" value="&lt;font style=&quot;font-size: 31px;&quot;&gt;?&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="4a4NvUETeh-wOAMc8H7S-64" connectable="0" vertex="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="V90R9nzLersKIaa7TwwB-1" value="User will also probably connect&amp;nbsp; directly from browser to media server (or some other) to receive live stream data through UDP probably" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="730" y="945" width="310" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
