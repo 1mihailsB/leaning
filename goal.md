@@ -17,7 +17,7 @@
 ## Try making something lower level than what I can usually do in web dev work
 ## <b>For example:</b>
 - ### Self made messag ebus
-    - Start with minimal set of functionality necessary only for the whole project (to avoid spending many months just on even bus itself)
+    - Start with minimal set of functionality necessary only for the this project to function
     - Message presistence - save incoming events/messages in permanent storage. For user statistics for example
     - Check existing protocol specifications, like <b>AMQP</b>. Check implementations in open source projects. Maybe worth to try making own protocol ?
 - ### Think of uses cases in this project for a <b>cross-language library</b> made in c/c++ to be used in other languages, for example with <b>Java JNI</b>.
