@@ -2,7 +2,7 @@
 - ### Regular web <b>FE/BE+DB</b>, allowing users browse currently ongoing streams or replay recorded streams. Possibly view the <b>statistics</b> about time spent viewing specific streams or recordings. No need for other extra features than those, mentioned in this bullet point.
 - ### <b>'Media server'</b> conntecting with streamer, receiving video/audio/other data for ongoing stream, possibly changing encoding/compression/quality. Possibly connecting to viewers and sending the currently ongoing stream to viewers, or sending stream data to some service that will distribute live stream to viewers (after the live stream data is compressed/converted by media server) <b>(Check wowza/red5pro/kurento services and RTMP, ffmpeg libs)</b>
 - ### <b>'Recording server'</b> or mechanism to save the audio, video, chat and possibly meta data of ongoing stream so it can be replayed by viewers after stream is over. Could be part of <b>Media server</b> ?
-- ### Custom made <b>event bus</b> (minimalistic Kafka) just for the minimal set of features of this project. To start communications before our services or initiate connections between users and some services other than Backend server behind the user facing Frontend. <b>Maybe some self made binary protocol ?</b>
+- ### Custom made <b>event bus</b> (minimalistic Kafka) just for the minimal set of features of this project. To start communications between our services or initiate connections between users and some services other than Backend server behind the user facing Frontend. <b>Maybe some self made binary protocol ?</b>
 - ### Some way for a person to start streaming - connect to media server and actually send video/audio/mic/camera/windows from persons machine. Maybe use existing solutions for that <b>(OBS)</b>. Maybe possible through the <b>browser instead of OBS, like Google meet and it's screen share</b>.
 
 </br>
@@ -17,7 +17,7 @@
 ## Try making something lower level than what I can usually do in web dev work
 ## <b>For example:</b>
 - ### Self made messag ebus
-    - Start with minimal set of functionality necessary only for the whole project (to avoid spending many months just on even bus itself)
+    - Start with minimal set of functionality necessary only for the this project to function
     - Message presistence - save incoming events/messages in permanent storage. For user statistics for example
     - Check existing protocol specifications, like <b>AMQP</b>. Check implementations in open source projects. Maybe worth to try making own protocol ?
 - ### Think of uses cases in this project for a <b>cross-language library</b> made in c/c++ to be used in other languages, for example with <b>Java JNI</b>.
