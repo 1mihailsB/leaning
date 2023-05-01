@@ -132,6 +132,8 @@ int main()
                     if (epoll_ctl(epollfd, EPOLL_CTL_DEL, events[n].data.fd, &events[n]) == -1) {
                         perror("epoll_ctl EPOLL_CTL_DEL:");
                     }
+
+                    close(events[n].data.fd);
                 }
 
                 buf[curSize] = '\0';
