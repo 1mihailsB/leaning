@@ -137,7 +137,7 @@ int main()
                 }
 
                 buf[curSize] = '\0';
-                printf("received from client: %s\n", buf);
+                printf("received from client %d: %s\n", events[n].data.fd, buf);
                 curSize = 0;
                 memset(&buf, 0, bufs);
             }
