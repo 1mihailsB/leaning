@@ -18,9 +18,14 @@ void *get_in_addr(struct sockaddr *sa)
     return &(((struct sockaddr_in6*)sa)->sin6_addr);
 }
 
+// void fillMessage(char* msg)
+// {
+//     return [];
+// }
+
 int main(int argc, char *argv[])
 {
-    int sockfd;
+    int sockfd[5];
     struct addrinfo hints, *servinfo, *p;
     int rv;
     char s[INET6_ADDRSTRLEN];
@@ -40,20 +45,22 @@ int main(int argc, char *argv[])
     }
 
     // loop through all the results and connect to the first we can
-    for(p = servinfo; p != NULL; p = p->ai_next) {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype,
-                p->ai_protocol)) == -1) {
-            perror("client: socket");
-            continue;
-        }
+    for(int sn = 0; sn < 5; sn++) {
+        for(p = servinfo; p != NULL; p = p->ai_next) {
+            if ((sockfd[sn] = socket(p->ai_family, p->ai_socktype,
+                    p->ai_protocol)) == -1) {
+                perror("client: socket");
+                continue;
+            }
 
-        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sockfd);
-            perror("client: connect");
-            continue;
-        }
+            if (connect(sockfd[sn], p->ai_addr, p->ai_addrlen) == -1) {
+                close(sockfd[sn]);
+                perror("client: connect");
+                continue;
+            }
 
-        break;
+            break;
+        }
     }
 
     if (p == NULL) {
@@ -74,15 +81,18 @@ int main(int argc, char *argv[])
         char text[17];
         int size = sprintf(text, "Hello%d", times);
 
-        if ((sent = send(sockfd, text, size + 1, 0)) == -1) {
-            perror("send");
-            exit(1);
+
+        for(int sn = 0; sn < 5; sn++) {
+            if ((sent = send(sockfd[sn], text, size + 1, 0)) == -1) {
+                perror("send");
+                exit(1);
+            }
         }
 
-        sleep(2);
+        usleep(500000);
     }
 
-    close(sockfd);
+    // close(sockfd);
 
     return 0;
 }

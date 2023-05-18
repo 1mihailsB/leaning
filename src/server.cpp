@@ -126,7 +126,7 @@ int main()
                     continue;
                 }
 
-                curSize = recv(curFd, &buf[curFd], BUFS, 0);
+                curSize = recv(curFd, buf[curFd], BUFS, 0);
                 if (curSize == -1) {
                     perror("recv:");
                 } else if (curSize == 0) {
