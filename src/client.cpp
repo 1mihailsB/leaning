@@ -69,12 +69,12 @@ int main(int argc, char *argv[])
 
     int times = 0;
     while(1) {
-        times++;
         int sent = 0;
+        times++;
         char text[17];
-        sprintf(text, "Hello%d", times);
+        int size = sprintf(text, "Hello%d", times);
 
-        if ((sent = send(sockfd, text, 17, 0)) == -1) {
+        if ((sent = send(sockfd, text, size + 1, 0)) == -1) {
             perror("send");
             exit(1);
         }

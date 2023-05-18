@@ -5,11 +5,14 @@
 #include <sys/epoll.h>
 
 #define PORT "3490"
-#define BACKLOG 10
+#define BACKLOG 1000
+#define BUFS 4096
+
+char buf[BUFS][BUFS];
 
 int main()
 {
-    int listenSockfd, new_fd;
+    int listenSockfd;
     struct addrinfo hints, *servinfo, *p;
     int yes = 1;
     int rv;
@@ -82,9 +85,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    const size_t bufs = 4096;
     int curSize = 0;
-    char buf[bufs];
 
     for (;;)
     {
@@ -97,24 +98,18 @@ int main()
 
         for (int n = 0; n < nfds; ++n)
         {
-            if (events[n].data.fd == listenSockfd)
+            int curFd = events[n].data.fd;
+            if (curFd == listenSockfd)
             {
                 sockaddr con_address;
                 socklen_t casize = sizeof con_address;
                 conn_sock = accept(listenSockfd, &con_address, &casize);
                 if (conn_sock == -1)
                 {
-                    perror("accept");
+                    perror("accept: conn_sock");
                     exit(EXIT_FAILURE);
-                }
+                };
 
-                if (setsockopt(conn_sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
-                {
-                    perror("setsockopt conn_sock");
-                    exit(1);
-                }
-
-                ev.events = EPOLLIN; // EPOLLIN | EPOLLET
                 ev.data.fd = conn_sock;
                 if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
                               &ev) == -1)
@@ -125,21 +120,26 @@ int main()
             }
             else
             {
-                curSize = recv(events[n].data.fd, &buf, bufs, 0);
+                if (curFd >= BUFS)
+                {
+                    printf("Skipped fd: %d. Out of buffer bounds.\n", curFd);
+                    continue;
+                }
+
+                curSize = recv(curFd, &buf[curFd], BUFS, 0);
                 if (curSize == -1) {
                     perror("recv:");
                 } else if (curSize == 0) {
-                    if (epoll_ctl(epollfd, EPOLL_CTL_DEL, events[n].data.fd, &events[n]) == -1) {
+                    if (epoll_ctl(epollfd, EPOLL_CTL_DEL, curFd, &events[n]) == -1) {
                         perror("epoll_ctl EPOLL_CTL_DEL:");
                     }
 
-                    close(events[n].data.fd);
+                    close(curFd);
                 }
 
-                buf[curSize] = '\0';
-                printf("received from client %d: %s\n", events[n].data.fd, buf);
+                printf("received %d bytes from client %d: %s\n", curSize, curFd, buf[curFd]);
                 curSize = 0;
-                memset(&buf, 0, bufs);
+                memset(&buf[curFd], 0, BUFS);
             }
         }
     }
