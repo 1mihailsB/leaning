@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <unistd.h>
+#include "queue.cpp"
 
 #define THREADS 10
 
@@ -24,6 +25,19 @@ void *work(void *arg) {
 }
 
 int main() {
+    Queue jq = Queue::init(1000);
+    for (int i = 0; i < 1000; i++) {
+        jq.add(i);
+    }
+
+    for (int i = 0; jq.size > 0; i++) {
+        int take = jq.take();
+        printf("Taken job:%d\n", take);
+    }
+
+    printf("Size of queue: %lu\n", sizeof(jq));
+
+    return 0;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
 
