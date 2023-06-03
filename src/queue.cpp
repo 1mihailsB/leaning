@@ -15,34 +15,38 @@
 
 #define incCap(inc, compare) inc = (inc < compare) ? inc + 1 : inc;
 
+template <typename T>
 struct Queue {
     int maxLen;
     int size;
     int nextTakeAt;
     int nextAddAt;
-    int *queue;
+    T *queue;
 
     static Queue init(int);
-    inline void add(int);
-    inline int take();
+    inline void add(T);
+    inline T take();
 };
 
-Queue Queue::init(int len) {
+template <typename T>
+Queue<T> Queue<T>::init(int len) {
     Queue jq = { len };
-    jq.queue = (int*) malloc(sizeof(int) * jq.maxLen);
+    jq.queue = (T*) malloc(sizeof(T) * jq.maxLen);
     return jq;
 }
 
 // Currently this function will override existing 'nextTakeAt' value if it's called when
 // last == nextTakeAt. It does not resize when size reaches maxLen
-void Queue::add(int x) {
+template <typename T>
+void Queue<T>::add(T x) {
     queue[nextAddAt] = x;
     incRotate(nextAddAt, maxLen)
     incCap(size, maxLen)
 }
 
-int Queue::take() {
-    int ret = queue[nextTakeAt];
+template <typename T>
+T Queue<T>::take() {
+    T ret = queue[nextTakeAt];
     size = size == 0 ? 0 : size - 1;
     incRotate(nextTakeAt, maxLen)
 

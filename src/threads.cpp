@@ -25,14 +25,14 @@ void *work(void *arg) {
 }
 
 int main() {
-    Queue jq = Queue::init(1000);
+    Queue jq = Queue<float>::init(1000);
     for (int i = 0; i < 1000; i++) {
-        jq.add(i);
+        jq.add(55.32);
     }
 
     for (int i = 0; jq.size > 0; i++) {
-        int take = jq.take();
-        printf("Taken job:%d\n", take);
+        float take = jq.take();
+        printf("Taken job:%.2f\n", take);
     }
 
     printf("Size of queue: %lu\n", sizeof(jq));
