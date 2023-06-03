@@ -7,13 +7,13 @@
 //         inc++;\
 //     }
 
-#define incRotate(inc, compare) inc = (inc < compare - 1) ? inc + 1 : 0;
+#define incRotate(inc, compare) inc = (inc < compare - 1) ? inc + 1 : 0
 
 // #define incCap(inc, compare) if (inc < compare) {\
 //     inc++;\
 // }
 
-#define incCap(inc, compare) inc = (inc < compare) ? inc + 1 : inc;
+#define incCap(inc, compare) inc = (inc < compare) ? inc + 1 : inc
 
 template <typename T>
 struct Queue {
@@ -40,15 +40,15 @@ Queue<T> Queue<T>::init(int len) {
 template <typename T>
 void Queue<T>::add(T x) {
     queue[nextAddAt] = x;
-    incRotate(nextAddAt, maxLen)
-    incCap(size, maxLen)
+    incRotate(nextAddAt, maxLen);
+    incCap(size, maxLen);
 }
 
 template <typename T>
 T Queue<T>::take() {
     T ret = queue[nextTakeAt];
     size = size == 0 ? 0 : size - 1;
-    incRotate(nextTakeAt, maxLen)
+    incRotate(nextTakeAt, maxLen);
 
     return ret;
 }
