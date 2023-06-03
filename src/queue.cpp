@@ -36,7 +36,7 @@ Queue<T> Queue<T>::init(int len) {
 }
 
 // Currently this function will override existing 'nextTakeAt' value if it's called when
-// last == nextTakeAt. It does not resize when size reaches maxLen
+// nextAddAt == nextTakeAt. It does not resize when size reaches maxLen
 template <typename T>
 void Queue<T>::add(T x) {
     queue[nextAddAt] = x;
