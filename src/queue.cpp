@@ -53,5 +53,8 @@ T Queue<T>::take() {
     return ret;
 }
 
+#undef incRotate
+#undef incCap
+
 #define QUEUE
 #endif
