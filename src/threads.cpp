@@ -6,7 +6,7 @@
 #include "queue.cpp"
 
 #define THREADS 10
-#define WORKSIZE 1000
+#define WORKSIZE 100000
 
 static pthread_t threads[THREADS];
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
@@ -14,7 +14,7 @@ static pthread_mutex_t lock;
 static int count = 0;
 static bool workfinished = false;
 
-Queue jq = Queue<float>::init(1000);
+Queue jq = Queue<float>::init(WORKSIZE);
 
 void *work(void *arg) {
     pthread_t *t = (pthread_t*) arg;
@@ -23,30 +23,31 @@ void *work(void *arg) {
     for(;;) {
         pthread_mutex_lock(&lock);
         while(jq.size == 0) {
-            printf("Thread %lu waiting for condition\n", tnum);
-            pthread_cond_wait(&cond, &lock);
-
-            if (count >= WORKSIZE) {
+            if (workfinished) {
                 printf("Thread %lu returning\n", tnum);
-                pthread_cond_broadcast(&cond);
                 pthread_mutex_unlock(&lock);
                 return NULL;
             }
+
+            printf("Thread %lu waiting for condition\n", tnum);
+            pthread_cond_wait(&cond, &lock);
         }
 
-        int c = count;
         float item = jq.take();
 
         printf("Work function #%lu, thread #%lu, count: %d\n", tnum, threads[tnum], count);
         printf("Queue size: %d, value: %.2f\n", jq.size, item);
 
-        count = c + 1;
+        count++;
+        printf("Incremented count: %d\n", count);
         if (count >= WORKSIZE) {
-            pthread_cond_broadcast(&cond);
+            workfinished = true;
+            pthread_cond_signal(&cond);
         }
-        usleep(10000);
         pthread_mutex_unlock(&lock);
     }
+
+    return NULL;
 }
 
 void initQueue() {
@@ -73,13 +74,13 @@ int main() {
         return 1;
     }
 
-    // initQueue();
+    initQueue();
     for (int i = 0; i < THREADS; i++) {
         list[i] = i;
         int num = pthread_create(&threads[i], &attr, work, (void*) (list + i));
     }
 
-    initQueue();
+    // initQueue();
 
     for (int i = 0; i < THREADS; i++) {
         printf("thread join %d\n", i);
