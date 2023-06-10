@@ -1,20 +1,10 @@
 #if !defined (QUEUE)
 #include <stdlib.h>
 
-// #define incRotate(inc, compare) if (inc >= compare - 1) {\
-//         inc = 0;\
-//     } else {\
-//         inc++;\
-//     }
-
 #define incRotate(inc, compare) inc = (inc < compare - 1) ? inc + 1 : 0
-
-// #define incCap(inc, compare) if (inc < compare) {\
-//     inc++;\
-// }
-
 #define incCap(inc, compare) inc = (inc < compare) ? inc + 1 : inc
 
+// TODO: memory cleanup function
 template <typename T>
 struct Queue {
     int maxLen;
