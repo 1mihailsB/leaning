@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/epoll.h>
+#include <fcntl.h>
 
 #define PORT "3490"
 #define BACKLOG 1000
@@ -77,15 +78,13 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    ev.events = EPOLLIN;
+    ev.events = EPOLLIN | EPOLLONESHOT;
     ev.data.fd = listenSockfd;
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, listenSockfd, &ev) == -1)
     {
         perror("epoll_ctl: listenSockfd");
         exit(EXIT_FAILURE);
     }
-
-    int curSize = 0;
 
     for (;;)
     {
@@ -110,6 +109,14 @@ int main()
                     exit(EXIT_FAILURE);
                 };
 
+                int flags = fcntl(conn_sock, F_GETFL);
+                if (flags == -1) {
+                    perror("fcntl: conn_sock");
+                    exit(EXIT_FAILURE);
+                }
+
+                fcntl(conn_sock, F_SETFL, flags | O_NONBLOCK);
+
                 ev.data.fd = conn_sock;
                 if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
                               &ev) == -1)
@@ -126,19 +133,42 @@ int main()
                     continue;
                 }
 
-                curSize = recv(curFd, buf[curFd], BUFS, 0);
-                if (curSize == -1) {
-                    perror("recv:");
-                } else if (curSize == 0) {
+                int curSize = 0;
+                int read = 0;
+                while ((read = recv(curFd, buf[curFd] + curSize, BUFS, 0)) > 0) {
+                    printf("Read > 0; %s\n", buf[curFd]);
+                    curSize += read;
+                    read = 0;
+                }
+
+                if (curSize >= BUFS) {
+                    printf("Cursize >= BUFS%d\n", curSize);
+                }
+
+                if (read == 0) {
                     if (epoll_ctl(epollfd, EPOLL_CTL_DEL, curFd, &events[n]) == -1) {
                         perror("epoll_ctl EPOLL_CTL_DEL:");
                     }
 
                     close(curFd);
+                    continue;
+                }
+
+                if (read == -1) {
+                        perror("recv: read == -1");
+                    if (errno == EWOULDBLOCK) {
+                        printf("[warning] recv(), [errno %s]\n", "EWOULDBLOCK");
+                    }
+
+                    // rearm EPOLLONESHOT
+                    if (epoll_ctl(epollfd, EPOLL_CTL_MOD, curFd, &ev) == -1) {
+                        perror("Rearm failed");
+                    }
+
+                    continue;
                 }
 
                 printf("received %d bytes from client %d: %s\n", curSize, curFd, buf[curFd]);
-                curSize = 0;
                 memset(&buf[curFd], 0, BUFS);
             }
         }
@@ -146,3 +176,4 @@ int main()
 
     return 0;
 }
+
