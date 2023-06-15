@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
                 continue;
             }
 
+            printf("socket %d connected\n", sockfd[sn]);
+
             break;
         }
     }

@@ -22,7 +22,7 @@ void start_epoll_loop(int listenSockfd)
         exit(EXIT_FAILURE);
     }
 
-    ev.events = EPOLLIN | EPOLLONESHOT;
+    ev.events = EPOLLIN;
     ev.data.fd = listenSockfd;
     if (epoll_ctl(epollfd, EPOLL_CTL_ADD, listenSockfd, &ev) == -1)
     {
@@ -62,12 +62,15 @@ void start_epoll_loop(int listenSockfd)
                 fcntl(conn_sock, F_SETFL, flags | O_NONBLOCK);
 
                 ev.data.fd = conn_sock;
+                ev.events = EPOLLIN | EPOLLONESHOT;
                 if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock,
                               &ev) == -1)
                 {
                     perror("epoll_ctl: conn_sock");
                     exit(EXIT_FAILURE);
                 }
+
+                printf("conn_sock: %d\n", conn_sock);
             }
             else
             {
@@ -105,6 +108,8 @@ void start_epoll_loop(int listenSockfd)
                     }
 
                     // rearm EPOLLONESHOT
+                    ev.data.fd = curFd;
+                    ev.events = EPOLLIN | EPOLLONESHOT;
                     if (epoll_ctl(epollfd, EPOLL_CTL_MOD, curFd, &ev) == -1) {
                         perror("Rearm failed");
                     }
