@@ -11,63 +11,8 @@
 
 char buf[BUFS][BUFS];
 
-int main()
+void start_epoll_loop(int listenSockfd)
 {
-    int listenSockfd;
-    struct addrinfo hints, *servinfo, *p;
-    int yes = 1;
-    int rv;
-
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;
-
-    if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0)
-    {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-        return 1;
-    }
-
-    for (p = servinfo; p != NULL; p = p->ai_next)
-    {
-        if ((listenSockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
-        {
-            perror("server: socket");
-            continue;
-        }
-
-        if (setsockopt(listenSockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
-        {
-            perror("setsockopt");
-            exit(1);
-        }
-
-        if (bind(listenSockfd, p->ai_addr, p->ai_addrlen) == -1)
-        {
-            close(listenSockfd);
-            perror("server: bind");
-            continue;
-        }
-
-        break;
-    }
-
-    freeaddrinfo(servinfo);
-
-    if (p == NULL)
-    {
-        fprintf(stderr, "server: failed to bind\n");
-        exit(1);
-    }
-
-    if (listen(listenSockfd, BACKLOG) == -1) {
-        perror("listen");
-        exit(1);
-    }
-
-    // epoll
-
     struct epoll_event ev, events[BACKLOG];
     int conn_sock, nfds, epollfd;
 
@@ -136,7 +81,7 @@ int main()
                 int curSize = 0;
                 int read = 0;
                 while ((read = recv(curFd, buf[curFd] + curSize, BUFS, 0)) > 0) {
-                    printf("Read > 0; %s\n", buf[curFd]);
+                    printf("Read > 0; %s, socket: %d\n", buf[curFd], curFd);
                     curSize += read;
                     read = 0;
                 }
@@ -173,7 +118,68 @@ int main()
             }
         }
     }
+}
+
+int create_server_socket() {
+    int listenSockfd;
+    struct addrinfo hints, *servinfo, *p;
+    int yes = 1;
+    int rv;
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+
+    if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0)
+    {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        exit(EXIT_FAILURE);
+    }
+
+    for (p = servinfo; p != NULL; p = p->ai_next)
+    {
+        if ((listenSockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+        {
+            perror("server: socket");
+            continue;
+        }
+
+        if (setsockopt(listenSockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
+        {
+            perror("setsockopt");
+            exit(1);
+        }
+
+        if (bind(listenSockfd, p->ai_addr, p->ai_addrlen) == -1)
+        {
+            close(listenSockfd);
+            perror("server: bind");
+            continue;
+        }
+
+        break;
+    }
+
+    freeaddrinfo(servinfo);
+
+    if (p == NULL)
+    {
+        fprintf(stderr, "server: failed to bind\n");
+        exit(1);
+    }
+
+    if (listen(listenSockfd, BACKLOG) == -1) {
+        perror("listen");
+        exit(1);
+    }
+
+    return listenSockfd;
+}
+
+int main() {
+    int serverSocket = create_server_socket();
+    start_epoll_loop(serverSocket);
 
     return 0;
 }
-
