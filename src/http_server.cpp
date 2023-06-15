@@ -5,7 +5,6 @@
 #include <sys/epoll.h>
 #include <fcntl.h>
 
-#define PORT "3490"
 #define BACKLOG 1000
 #define BUFS 4096
 
@@ -120,6 +119,9 @@ void start_epoll_loop(int listenSockfd)
     }
 }
 
+#define PORT "3490"
+#define OS_BACKLOG 1000
+
 int create_server_socket() {
     int listenSockfd;
     struct addrinfo hints, *servinfo, *p;
@@ -169,7 +171,7 @@ int create_server_socket() {
         exit(1);
     }
 
-    if (listen(listenSockfd, BACKLOG) == -1) {
+    if (listen(listenSockfd, OS_BACKLOG) == -1) {
         perror("listen");
         exit(1);
     }
