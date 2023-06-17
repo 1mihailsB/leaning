@@ -4,6 +4,7 @@
 #include <sys/wait.h>
 #include <sys/epoll.h>
 #include <fcntl.h>
+#include <sys/resource.h>
 
 #define BACKLOG 1000
 #define BUFS 4096
@@ -185,6 +186,20 @@ int create_server_socket() {
 }
 
 int main() {
+    printf("test");
+    rlimit r;
+    r.rlim_cur = 1048576;
+    r.rlim_max = 1048576;
+    int set = setrlimit(RLIMIT_NOFILE, &r);
+    if(set == -1) {
+        printf("setrlimit(RLIMIT_NOFILE, %lu) failed\n", r.rlim_cur);
+        perror("err");
+        exit(EXIT_FAILURE);
+    }
+
+    rlimit get;
+    getrlimit(RLIMIT_NOFILE, &get);
+
     int serverSocket = create_server_socket();
     start_epoll_loop(serverSocket);
 
