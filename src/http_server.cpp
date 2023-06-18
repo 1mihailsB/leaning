@@ -6,10 +6,13 @@
 #include <fcntl.h>
 #include <sys/resource.h>
 
+#include "hashmap.cpp"
+
 #define BACKLOG 1000
+#define MAX_CONN 4096
 #define BUFS 4096
 
-char buf[BUFS][BUFS];
+char buf[MAX_CONN][BUFS];
 
 void start_epoll_loop(int listenSockfd)
 {
@@ -75,7 +78,7 @@ void start_epoll_loop(int listenSockfd)
             }
             else
             {
-                if (curFd >= BUFS)
+                if (curFd >= MAX_CONN)
                 {
                     printf("Skipped fd: %d. Out of buffer bounds.\n", curFd);
                     continue;
@@ -186,7 +189,6 @@ int create_server_socket() {
 }
 
 int main() {
-    printf("test");
     rlimit r;
     r.rlim_cur = 1048576;
     r.rlim_max = 1048576;
@@ -197,8 +199,11 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    rlimit get;
-    getrlimit(RLIMIT_NOFILE, &get);
+
+    HashMap hm = HashMap<int>::init(1048576);
+    int hash = hm.hash(5);
+    int staticHash = HashMap<int>::hash(5);
+
 
     int serverSocket = create_server_socket();
     start_epoll_loop(serverSocket);

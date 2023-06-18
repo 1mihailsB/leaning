@@ -5,6 +5,7 @@
 #define incCap(inc, compare) inc = (inc < compare) ? inc + 1 : inc
 
 // TODO: memory cleanup function
+// FIFO
 template <typename T>
 struct Queue {
     int maxLen;
