@@ -199,10 +199,14 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
+    HashMapNode<int> x = HashMapNode<int> { true };
+    HashMap hm = HashMap<int>::init(100000);
 
-    HashMap hm = HashMap<int>::init(1048576);
-    int hash = hm.hash(5);
-    int staticHash = HashMap<int>::hash(5);
+    hm.add(5);
+    hm.add(7);
+    hm.add(5);
+    hm.add(100005);
+    hm.add(100005);
 
 
     int serverSocket = create_server_socket();
