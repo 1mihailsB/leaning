@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 
 #define PORT "3490" // the port client will be connecting to 
+#define CONS 5
 
 // get sockaddr, IPv4 or IPv6:
 void *get_in_addr(struct sockaddr *sa)
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
     }
 
     // loop through all the results and connect to the first we can
-    for(int sn = 0; sn < 5; sn++) {
+    for(int sn = 0; sn < CONS; sn++) {
         for(p = servinfo; p != NULL; p = p->ai_next) {
             if ((sockfd[sn] = socket(p->ai_family, p->ai_socktype,
                     p->ai_protocol)) == -1) {
@@ -84,8 +85,9 @@ int main(int argc, char *argv[])
         int size = sprintf(text, "Hello%d", times);
 
 
-        for(int sn = 0; sn < 5; sn++) {
-            if ((sent = send(sockfd[sn], text, size + 1, 0)) == -1) {
+        for(int sn = 0; sn < CONS; sn++) {
+            // size + 1 to also send '\o'
+            if ((sent = send(sockfd[sn], text, size, 0)) == -1) {
                 perror("send");
                 exit(1);
             }

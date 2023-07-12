@@ -6,10 +6,6 @@
         newNode->taken = true; \
         newNode->item = itm
 
-#define RETURN_IF_TAKEN(itm, comp) if (itm == comp) {\
-            return AddResult::ALREADY_PRESENT;\
-        }
-
 template <typename T>
 struct HashMapNode {
     bool taken;
@@ -22,21 +18,21 @@ enum AddResult {
     ALREADY_PRESENT = -1
 };
 
-template <typename T>
+template <typename K, typename T>
 struct HashMap {
-    int capacity;
-    int count;
+    unsigned int capacity;
+    unsigned int count;
     HashMapNode<T> *entries;
 
-    AddResult add(T);
+    T* add(K, T);
+    T* get(K);
 
-    static int hash(T, int);
-    static HashMap<T> init(int);
+    static HashMap<K, T> init(unsigned int);
 };
 
-template <typename T>
-HashMap<T> HashMap<T>::init(int len) {
-    HashMap hm = { len };
+template <typename K, typename T>
+HashMap<K, T> HashMap<K, T>::init(unsigned int capacity) {
+    HashMap<K, T> hm = { capacity };
     hm.entries = (HashMapNode<T>*) malloc(sizeof(HashMapNode<T>) * hm.capacity);
 
     if (hm.entries == NULL) {
@@ -47,24 +43,29 @@ HashMap<T> HashMap<T>::init(int len) {
     return hm;
 }
 
-template <typename T>
-AddResult HashMap<T>::add(T item) {
-    int hash = HashMap<T>::hash(item, this->capacity);
-    HashMapNode<T> *entry = &(this->entries[hash]);
+static inline int hash(int key, unsigned int max) {
+    return key % max;
+}
+
+template <typename K, typename T>
+T* HashMap<K, T>::add(K key, T item) {
+    int hsh = hash(key, this->capacity);
+    HashMapNode<T> *entry = &(this->entries[hsh]);
 
     if (entry->taken == true) {
         if (entry->next == NULL) {
-            RETURN_IF_TAKEN(entry->item, item)
+            if (entry->item == item) return NULL;
 
             HashMapNode<T> *newNode = CREATE_NODE(item);
             entry->next = newNode;
         } else {
-            RETURN_IF_TAKEN(entry->next->item, item)
+            // for some item types operator== is overriden for this check
+            if (entry->next->item == item) return NULL;
             HashMapNode<T> *next = entry->next;
 
             while (next->next != NULL) {
                 next = next->next;
-                RETURN_IF_TAKEN(next->item, item)
+                if (next->item == item) return NULL;
             }
 
             HashMapNode<T> *newNode =  CREATE_NODE(item);
@@ -77,17 +78,31 @@ AddResult HashMap<T>::add(T item) {
 
     this->count++;
 
-    return AddResult::OK;
+    return &entry->item;
 }
 
-// specialzation for int T
-template<>
-int HashMap<int>::hash(int val, int max) {
-    return val % max;
+template <typename K, typename T>
+T* HashMap<K, T>::get(K key) {
+    int hsh = hash(key, this->capacity);
+    HashMapNode<T> *entry = &(this->entries[hsh]);
+
+    if(!entry->taken) { return NULL; };
+    // for some item types operator== is overriden for this check
+    if (entry->item == key) { return &entry->item; }
+
+    HashMapNode<T> *next = entry->next;
+    if (next == NULL) { return NULL; };
+
+    while (next != NULL) {
+        if (next->item == key) { return &next->item; }
+        next = next->next;
+    }
+
+    return NULL;
 }
+
 
 #undef CREATE_NODE
-#undef RETURN_IF_TAKEN
 
 #define HASHMAP
 #endif

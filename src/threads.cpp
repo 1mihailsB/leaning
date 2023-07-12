@@ -6,7 +6,7 @@
 #include "queue.cpp"
 
 #define THREADS 10
-#define WORKSIZE 100000
+#define WORKSIZE 1000000
 
 static pthread_t threads[THREADS];
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
