@@ -7,9 +7,8 @@
 #include <sys/resource.h>
 #include <pthread.h>
 
-#include "hashmap.cpp"
+#include "ds.cpp"
 #include "request.cpp"
-#include "queue.cpp"
 
 #define THREADS 5
 static pthread_t threads[THREADS];

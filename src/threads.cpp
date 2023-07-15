@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <unistd.h>
-#include "queue.cpp"
+#include "ds.cpp"
 
 #define THREADS 10
 #define WORKSIZE 1000000
