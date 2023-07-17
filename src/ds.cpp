@@ -1,6 +1,7 @@
 #if !defined DATA_STRUCTURES
 
 #include <stdlib.h>
+#include <stdint.h>
 
 ///////////////////////////////////////////////////////////////////// HASHMAP ///////////////////////////////////////////////////////
 
@@ -22,18 +23,18 @@ enum AddResult {
 
 template <typename K, typename T>
 struct HashMap {
-    unsigned int capacity;
-    unsigned int count;
+    uint32_t capacity;
+    uint32_t count;
     HashMapNode<T> *entries;
 
     T* add(K, T);
     T* get(K);
 
-    static HashMap<K, T> init(unsigned int);
+    static HashMap<K, T> init(uint32_t);
 };
 
 template <typename K, typename T>
-HashMap<K, T> HashMap<K, T>::init(unsigned int capacity) {
+HashMap<K, T> HashMap<K, T>::init(uint32_t capacity) {
     HashMap<K, T> hm = { capacity };
     hm.entries = (HashMapNode<T>*) malloc(sizeof(HashMapNode<T>) * hm.capacity);
 
@@ -45,7 +46,7 @@ HashMap<K, T> HashMap<K, T>::init(unsigned int capacity) {
     return hm;
 }
 
-static inline int hash(int key, unsigned int max) {
+static inline int hash(int key, uint32_t max) {
     return key % max;
 }
 
@@ -117,19 +118,19 @@ T* HashMap<K, T>::get(K key) {
 // FIFO
 template <typename T>
 struct Queue {
-    int maxLen;
-    int size;
-    int nextTakeAt;
-    int nextAddAt;
+    uint32_t maxLen;
+    uint32_t size;
+    uint32_t nextTakeAt;
+    uint32_t nextAddAt;
     T *queue;
 
-    static Queue init(int);
+    static Queue init(uint32_t);
     inline void add(T);
     inline T take();
 };
 
 template <typename T>
-Queue<T> Queue<T>::init(int len) {
+Queue<T> Queue<T>::init(uint32_t len) {
     Queue jq = { len };
     jq.queue = (T*) malloc(sizeof(T) * jq.maxLen);
     return jq;

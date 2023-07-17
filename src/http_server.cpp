@@ -1,3 +1,5 @@
+#include "ignore_errors.h"
+
 #include <iostream>
 #include <netdb.h>
 #include <string.h>
@@ -23,7 +25,7 @@ static pthread_cond_t queueCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t queueLock;
 
 HashMap<int, HttpRequest> cons = HashMap<int, HttpRequest>::init(BACKLOG);
-static pthread_cond_t consCond = PTHREAD_COND_INITIALIZER;
+// static pthread_cond_t consCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t consLock;
 int epollfd;
 struct epoll_event events[BACKLOG];
@@ -31,6 +33,9 @@ struct epoll_event events[BACKLOG];
 // thread routine
 void *sock_read(void *arg)
 {
+    // to avoid -Werror=unused-variable
+    (void) arg;
+
     pthread_t t = pthread_self();
     int sockFd;
     HttpRequest *r;
@@ -54,7 +59,7 @@ void *sock_read(void *arg)
         r = cons.get(sockFd);
 
         if (r == NULL) {
-            HttpRequest newReq = HttpRequest::init(512, sockFd);
+            HttpRequest newReq = HttpRequest::init(256, sockFd);
             if ( (r = cons.add(sockFd, newReq)) == NULL ) {
                 perror("Couldn't add new request to list, even though it wasn't there.\n");
                 exit(EXIT_FAILURE);
@@ -65,16 +70,17 @@ void *sock_read(void *arg)
 
 
         // read data
-        int initSize = r->size;
         int read = 0;
-        while ((read = recv(sockFd, r->data + r->size, BUFS, 0)) > 0) {
+        r->resize();
+        while ((read = recv(sockFd, r->data + r->size, r->capacity - r->size, 0)) > 0) {
             r->size += read;
             read = 0;
+            r->resize();
             //                                                                               r->size >-1< is probably wrong, but no errors so far
-            printf("Read > 0; %.*s, socket: %d, curSize:%d, thread:%lu, ptr:%p\n", r->size, r->data, r->sockFd, r->size, t, r->data + r->size-1);
+            printf("Read > 0-----------\n; %.*s, socket: %d, curSize:%d, thread:%lu, ptr:%p\n", (int) r->size, r->data, r->sockFd, r->size, t, r->data + r->size-1);
         }
 
-        if (r->size >= BUFS) {r-
+        if (r->size >= BUFS) {
             printf("Cursize >= BUFS%d\n", r->size);
         }
 
@@ -267,7 +273,7 @@ void initThreadStuff()
     pthread_attr_init(&attr);
 
     for (int i = 0; i < THREADS; i++) {
-        int num = pthread_create(&threads[i], &attr, sock_read, (void*) i);
+        pthread_create(&threads[i], &attr, sock_read, NULL);
     }
 }
 
