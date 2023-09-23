@@ -84,6 +84,7 @@ T* HashMap<K, T>::add(K key, T item) {
     return &entry->item;
 }
 
+/* return: NULL if item not found, valid ptr otherwise */
 template <typename K, typename T>
 T* HashMap<K, T>::get(K key) {
     int hsh = hash(key, this->capacity);

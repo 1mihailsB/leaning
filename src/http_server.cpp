@@ -9,6 +9,7 @@
 #include <sys/resource.h>
 #include <pthread.h>
 
+#include "utils.cpp"
 #include "ds.cpp"
 #include "request.cpp"
 
@@ -29,6 +30,51 @@ HashMap<int, HttpRequest> cons = HashMap<int, HttpRequest>::init(BACKLOG);
 static pthread_mutex_t consLock;
 int epollfd;
 struct epoll_event events[BACKLOG];
+
+
+
+int assembleHttpRequest(HttpRequest *r) {
+    if (r->size == r->processed_size) {
+        return -1;
+    }
+
+    printf("Assembling http request for socket %d\n", r->sockFd);
+
+    if (r->status == HttpRequestAssemblyStatus::New) {
+        char *locCrlf;
+        if(!(locCrlf = strcasestr(r->data, CRLF))) {
+            fprintf(stderr, "Invalid request data, no CRLF found at the beginning\n");
+            return -1;
+        }
+
+        int crlfIdx = (int) (locCrlf - r->data);
+        printf("First %d chars  of request: %.*s\n", crlfIdx, crlfIdx, r->data);
+
+        int spaceIdx[2] = { 0 };
+        int s = 0;
+        char *locSpace;
+        while((locSpace = strstr(r->data + spaceIdx[0] + 1, " ")) && locSpace - r->data < crlfIdx && 2 > s) {
+            spaceIdx[s] = locSpace - r->data;
+            s++;
+        }
+
+        int result = strncmp("GET", r->data, 3);
+        char url = 
+
+        r->processed_size = crlfIdx;
+        r->status = HttpRequestAssemblyStatus::Header;
+
+        if (r->processed_size == r->size) {
+            return HttpRequestAssemblyStatus::Header;
+        }
+    }
+
+    if (r->status = HttpRequestAssemblyStatus::Header) {
+
+    }
+
+    return HttpRequestAssemblyStatus::Body;
+}
 
 // thread routine
 void *sock_read(void *arg)
@@ -68,7 +114,6 @@ void *sock_read(void *arg)
 
         pthread_mutex_unlock(&consLock);
 
-
         // read data
         int read = 0;
         r->resize();
@@ -77,41 +122,55 @@ void *sock_read(void *arg)
             read = 0;
             r->resize();
             //                                                                               r->size >-1< is probably wrong, but no errors so far
-            printf("Read > 0-----------\n; %.*s, socket: %d, curSize:%d, thread:%lu, ptr:%p\n", (int) r->size, r->data, r->sockFd, r->size, t, r->data + r->size-1);
+            printf("Read > 0-----------\n;%.*s, socket: %d, curSize:%d, thread:%lu, ptr:%p\n", (int) r->size, r->data, r->sockFd, r->size, t, r->data + r->size-1);
         }
 
         if (r->size >= BUFS) {
             printf("Cursize >= BUFS%d\n", r->size);
         }
 
+        // TODO: remove socket from queue and the request from hashmap
         if (read == 0) {
-            //
             if (epoll_ctl(epollfd, EPOLL_CTL_DEL, r->sockFd, NULL) == -1) {
                 perror("epoll_ctl EPOLL_CTL_DEL:");
+                errno = 0;
             }
+
+            printf("Read == 0\n");
 
             close(r->sockFd);
             continue;
         }
 
         if (read == -1) {
-                perror("recv: read == -1");
+            // EWOULDBLOCK == EAGAIN
             if (errno == EWOULDBLOCK) {
-                printf("[warning] recv(), [errno %s]\n", "EWOULDBLOCK");
+                // if socket wasn't closed and expected EWOULDBLOCK happened - process the request data
+                assembleHttpRequest(r);
+
+                // printf("[warning] recv(), [errno %s]\n", "EWOULDBLOCK", errno);
+                perror("sock_read recv() EWOULDBLOCK");
+                errno = 0;
+                            // rearm EPOLLONESHOT
+                struct epoll_event ev;
+                ev.data.fd = r->sockFd;
+                ev.events = EPOLLIN | EPOLLONESHOT;
+                if (epoll_ctl(epollfd, EPOLL_CTL_MOD, r->sockFd, &ev) == -1) {
+                    perror("Rearm failed");
+                    errno = 0;
+                }
+
+                continue;
             }
 
-            // rearm EPOLLONESHOT
-            struct epoll_event ev;
-            ev.data.fd = r->sockFd;
-            ev.events = EPOLLIN | EPOLLONESHOT;
-            if (epoll_ctl(epollfd, EPOLL_CTL_MOD, r->sockFd, &ev) == -1) {
-                perror("Rearm failed");
-            }
 
+            perror("!!!!!!!!!!!!!!!!!1sock_read recv() -1!!!!!!!!!!!!!!!!!!!!!!!");
+            printf("errno:%d\n", errno);
             continue;
+            // TODO: remove socket from queue and request from hashmap ???
         }
 
-        printf("received %d bytes from client %d: %s\n", r->size, r->sockFd, r->data);
+        // printf("received %d bytes from client %d: %s\n", r->size, r->sockFd, r->data);
         // memset(&buf[curFd], 0, BUFS);
     }
 }
@@ -278,6 +337,7 @@ void initThreadStuff()
 }
 
 int main() {
+    fprintf(stderr, "Incorrect request, no CRLF found on first line\n");
     rlimit r;
     r.rlim_cur = 1048576;
     r.rlim_max = 1048576;
